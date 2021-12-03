@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glut.h>
+#include <iostream>
+#include <windows.h>
 
 double cameraX = 0;
 double cameraY = 0.7;
@@ -21,7 +23,7 @@ double snowX = 1;
 double snowY = 1;
 double snowZ = 1;
 bool snowM = false;
-bool small = false;
+bool smalling = false;
 
 //present variables+
 double present1_y = 0.07;
@@ -96,7 +98,21 @@ void setupCamera() {
 	glLoadIdentity();
 	gluLookAt(cameraX, cameraY, cameraZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
+void setupLights() {
+	GLfloat ambient[] = { 0.7f, 0.7f, 0.7, 1.0f };
+	GLfloat diffuse[] = { 0.6f, 0.6f, 0.6, 1.0f };
+	GLfloat specular[] = { 1.0f, 1.0f, 1.0, 1.0f };
+	GLfloat shininess[] = { 50 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
+	GLfloat lightIntensity[] = { 0.7f, 0.7f, 1, 1.0f };
+	GLfloat lightPosition[] = { -7.0f, 6.0f, 3.0f, 0.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightIntensity);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightIntensity);
+}
 void ground() {
 	glColor3d(1, 1, 1);
 	glPushMatrix();
@@ -691,8 +707,16 @@ void key(unsigned char k, int x, int y)//keyboard function, takes 3 parameters
 									// k is the key pressed from the keyboard
 									// x and y are mouse postion when the key was pressed.
 {
-	if (k == 'l')
+	if (k == 'l') {
 		L_pressed = !L_pressed;
+		if (L_pressed) {
+			PlaySound(NULL, NULL, SND_SYNC);
+			PlaySound(TEXT("Monolog Rockstars.wav"), NULL, SND_ASYNC);
+		}
+		else
+			PlaySound(NULL, NULL, SND_SYNC);
+
+	}
 
 	//camera movement
 	if (k == 's')
@@ -725,19 +749,51 @@ void key(unsigned char k, int x, int y)//keyboard function, takes 3 parameters
 	}
 	if (k == 'r') {
 		rotating = !rotating;
+		if (rotating) {
+			PlaySound(NULL, NULL, SND_SYNC);
+			PlaySound(TEXT("Monolog Rockstars.wav"), NULL, SND_ASYNC);
+		}
+		else
+			PlaySound(NULL, NULL, SND_SYNC);
 	}
 	if (k == 'g') {
 		flying = !flying;
+		if (flying) {
+			PlaySound(NULL, NULL, SND_SYNC);
+			PlaySound(TEXT("Monolog Rockstars.wav"), NULL, SND_ASYNC);
+		}
+		else
+			PlaySound(NULL, NULL, SND_SYNC);
 	}
 	if (k == 'k') {
 		snowM = !snowM;
+		if (snowM) {
+			PlaySound(NULL, NULL, SND_SYNC);
+			PlaySound(TEXT("Monolog Rockstars.wav"), NULL, SND_ASYNC);
+		}
+		else
+			PlaySound(NULL, NULL, SND_SYNC);
 	}
 	if (k == 'f') {
 		fenceM = !fenceM;
+		if (fenceM) {
+			PlaySound(NULL, NULL, SND_SYNC);
+			PlaySound(TEXT("Monolog Rockstars.wav"), NULL, SND_ASYNC);
+		}
+		else
+			PlaySound(NULL, NULL, SND_SYNC);
 	}
 	if (k == 'j') {
 		J_pressed = !J_pressed;
+		if (J_pressed)
+		{
+			PlaySound(NULL, NULL, SND_SYNC);
+			PlaySound(TEXT("Monolog Rockstars.wav"), NULL, SND_ASYNC);
+		}
+		else
+			PlaySound(NULL, NULL, SND_SYNC);
 	}
+	
 
 
 	glutPostRedisplay();//redisplay to update the screen with the changes
@@ -848,7 +904,7 @@ void shapeCmplx() {
 }
 void win() {
 	glColor3d(1, 1, 0);
-
+	
 	glPushMatrix();
 	glRotated(randomRot, 0, 1, 0);
 	glPushMatrix();
@@ -1004,7 +1060,6 @@ void win2() {
 	glPopMatrix();
 
 
-
 }
 
 void rain() {
@@ -1034,6 +1089,9 @@ void lose(int val) {
 		lanternLeg_B = 0;
 
 		glutTimerFunc(0, loadxandz, 0);
+
+		PlaySound(NULL, NULL, SND_SYNC);
+		PlaySound(TEXT("Good Evening Melancholy.wav"), NULL, SND_ASYNC);
 	}
 
 }
@@ -1068,12 +1126,22 @@ void Display() {
 
 	lantern();
 
-	if (player_x >= -0.01 && player_x <= 0.01 && player_z <= -0.29 && player_z >= -0.31)
+	if (player_x >= -0.01 && player_x <= 0.01 && player_z <= -0.29 && player_z >= -0.31 && !p1Taken) {
+		PlaySound(NULL, NULL, SND_SYNC);
+		PlaySound(TEXT("Twinkle.wav"), NULL, SND_ASYNC);
 		p1Taken = true;
-	if (player_x >= -0.51 && player_x <= -0.49 && player_z >= 0.49 && player_z <= 0.51)
+	}
+
+	if (player_x >= -0.51 && player_x <= -0.49 && player_z >= 0.49 && player_z <= 0.51 && !p2Taken) {
+		PlaySound(NULL, NULL, SND_SYNC);
+		PlaySound(TEXT("Twinkle.wav"), NULL, SND_ASYNC);
 		p2Taken = true;
-	if (player_x >= 0.49 && player_x <= 0.51 && player_z >= 0.49 && player_z <= 0.51)
+	}
+	if (player_x >= 0.49 && player_x <= 0.51 && player_z >= 0.49 && player_z <= 0.51&&!p3Taken) {
+		PlaySound(NULL, NULL, SND_SYNC);
+		PlaySound(TEXT("Twinkle.wav"), NULL, SND_ASYNC);
 		p3Taken = true;
+	}
 
 	if (p1Taken && p2Taken && p3Taken && !lost) {
 		win();
@@ -1095,7 +1163,7 @@ void smallBack() {
 		snowZ -= 0.001;
 	}
 	else {
-		small = false;
+		smalling = false;
 	}
 }
 void gateDown() {
@@ -1148,13 +1216,13 @@ void anim() {
 		fenceM = true;
 	}
 	if (snowM) {
-		if (snowX < 2 && !small) {
+		if (snowX < 2 && !smalling) {
 			snowX += 0.001;
 			snowY += 0.001;
 			snowZ += 0.001;
 		}
 		else {
-			small = true;
+			smalling = true;
 			smallBack();
 		}
 	}
@@ -1215,8 +1283,9 @@ void main(int argc, char** argv) {
 	glutKeyboardFunc(key);
 	glutIdleFunc(anim);
 	glutTimerFunc(0, timer, 0);
-	glutTimerFunc(20000, lose, 0);
+	glutTimerFunc(30000, lose, 0);
 	glutSpecialFunc(spe);
+	PlaySound(TEXT("op.wav"), NULL, SND_ASYNC);
 
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 	glClearColor(0.2f, 0.3f, 0.4f, 0.0f);
