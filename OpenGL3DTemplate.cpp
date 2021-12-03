@@ -72,6 +72,8 @@ double randomRot = 0;
 double rainRandx = 0;
 double rainY = 0.5;
 double rainRandz = 0;
+
+bool oneTime = false;
 //void setupLights() {
 //	GLfloat ambient[] = { 0.7f, 0.7f, 0.7, 1.0f };
 //	GLfloat diffuse[] = { 0.6f, 0.6f, 0.6, 1.0f };
@@ -1144,15 +1146,19 @@ void Display() {
 	}
 
 	if (p1Taken && p2Taken && p3Taken && !lost) {
+		
 		win();
 		win2();
 		won = true;
+		
 	}
 	if (lost)
-		for (int i = 0; i < 30; i++) {
-
 			rain();
-		}
+	if (won && !oneTime) {
+		oneTime = true;
+		PlaySound(NULL, NULL, SND_SYNC);
+		PlaySound(TEXT("Remedy for Melancholy.wav"), NULL, SND_ASYNC);
+	}
 
 	glFlush();
 }
