@@ -1,8 +1,9 @@
 
+#include <TextureBuilder.h>
+#include <glut.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <glut.h>
 #include <iostream>
 #include <windows.h>
 
@@ -75,6 +76,13 @@ double rainRandz = 0;
 
 bool oneTime = false;
 
+//score and health
+double hunger = 0;
+double health = 0.3;
+int score = 0;
+
+GLuint texID;
+
 void setupCamera() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -85,6 +93,7 @@ void setupCamera() {
 	glLoadIdentity();
 	gluLookAt(cameraX, cameraY, cameraZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
+
 void setupLights() {
 	GLfloat ambient[] = { 0.7f, 0.7f, 0.7, 1.0f };
 	GLfloat diffuse[] = { 0.6f, 0.6f, 0.6, 1.0f };
@@ -100,6 +109,128 @@ void setupLights() {
 	glLightfv(GL_LIGHT0, GL_POSITION, lightIntensity);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightIntensity);
 }
+
+void healthBar() {
+	glColor3d(0, 1, 0);
+	glBegin(GL_QUADS);
+	glVertex2d(0.1, 0.1);
+	glVertex2d(health, 0.1);
+	glVertex2d(health, 0.15);
+	glVertex2d(0.1, 0.15);
+	glEnd();
+
+	glColor3d(0, 0, 0);
+	glBegin(GL_QUADS);
+	glVertex2d(0.09, 0.09);
+	glVertex2d(0.31, 0.09);
+	glVertex2d(0.31, 0.16);
+	glVertex2d(0.09, 0.16);
+	glEnd();
+
+	
+
+	/*glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, texID);
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0.0f, 0.0f); glVertex2d(0.1, 0.1);
+		glTexCoord2f(1, 0.0f); glVertex2d(0.3, 0.1);
+		glTexCoord2f(1, 1); glVertex2d(0.3, 0.15);
+		glTexCoord2f(0.0f, 1); glVertex2d(0.1, 0.15);
+	glEnd();
+	glPopMatrix();*/
+
+	//glPushMatrix();
+	////first heart
+
+	//if (heart3) {
+	//	glPushMatrix();
+	//	glBindTexture(GL_TEXTURE_2D, texID);
+	//	glBegin(GL_QUADS);
+	//	glTexCoord2f(0.0f, 0.0f); glVertex2d(0.1, 0.02);
+	//	glTexCoord2f(1, 0.0f); glVertex2d(0.15, 0.02);
+	//	glTexCoord2f(1, 1); glVertex2d(0.15, 0.12);
+	//	glTexCoord2f(0.0f, 1); glVertex2d(0.1, 0.12);
+	//	glEnd();
+	//	
+	//	glPopMatrix();
+	//}
+	////second heart
+
+	//if (heart2) {
+	//	glBegin(GL_QUADS);
+	//	glColor3d(0, 0, 0);
+
+	//	glVertex2d(0.15, 0.02);
+	//	glVertex2d(0.15, 0.12);
+	//	glVertex2d(0.25, 0.12);
+	//	glVertex2d(0.25, 0.02);
+	//	glEnd();
+	//}
+	////third heart
+
+	//if (heart1) {
+	//	glBegin(GL_QUADS);
+	//	glColor3d(0, 0, 0);
+
+	//	glVertex2d(0.30, 0.02);
+	//	glVertex2d(0.30, 0.12);
+	//	glVertex2d(0.40, 0.12);
+	//	glVertex2d(0.40, 0.02);
+	//	glEnd();
+	/*}
+	glBegin(GL_QUADS);
+	glColor3d(1, 0, 0);
+
+	glVertex2d(0.05,0.02);
+	glVertex2d(0.05, 0.12);
+	glVertex2d(0.40, 0.12);
+	glVertex2d(0.40, 0.02);
+	glEnd();
+
+	glPopMatrix();*/
+}
+void print(double x, double y, char* string)
+{
+	int len, i;
+
+	//set the position of the text in the window using the x and y coordinates
+	glRasterPos2f(x, y);
+
+	//get the length of the string to display
+	len = (int)strlen(string);
+
+	//loop to display character by character
+	for (i = 0; i < len; i++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);
+	}
+}
+void hungerBar() {
+	glColor3d(0.9, 0, 0.1);
+	glBegin(GL_QUADS);
+	glVertex2d(0.1, 0.2);
+	glVertex2d(0.101+hunger, 0.2);
+	glVertex2d(0.101 + hunger, 0.25);
+	glVertex2d(0.1, 0.25);
+	glEnd();
+
+	glColor3d(0, 0, 0);
+	glBegin(GL_QUADS);
+	glVertex2d(0.09, 0.19);
+	glVertex2d(0.31, 0.19);
+	glVertex2d(0.31, 0.26);
+	glVertex2d(0.09, 0.26);
+	glEnd();
+}
+
+void printscore() {
+	glColor3d(1, 1, 1);
+	char* p0s[20];
+	sprintf((char*)p0s, "%d" , score);
+	print(1, 0.2, (char*)p0s);
+}
+
 void ground() {
 	glColor3d(1, 1, 1);
 	glPushMatrix();
@@ -1083,6 +1214,42 @@ void lose(int val) {
 
 }
 
+void screen() {
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0.0, 2.0, 2.0, 0.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	healthBar();
+	hungerBar();
+	printscore();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+
+
+}
+
+void TimerOfHunger(int val) {
+	if (hunger<0.199) {
+		hunger += 0.02;
+	}
+	else {
+		if (health > 0.101 )
+			health -= 0.02;
+	}
+
+	glutTimerFunc(2000, TimerOfHunger, 0);
+
+
+}
+
 void Display() {
 	//setupLights();
 	setupCamera();
@@ -1144,6 +1311,8 @@ void Display() {
 		PlaySound(NULL, NULL, SND_SYNC);
 		PlaySound(TEXT("Remedy for Melancholy.wav"), NULL, SND_ASYNC);
 	}
+
+	screen();
 
 	glFlush();
 }
@@ -1274,7 +1443,10 @@ void main(int argc, char** argv) {
 	glutKeyboardFunc(key);
 	glutIdleFunc(anim);
 	glutTimerFunc(0, timer, 0);
-	glutTimerFunc(30000, lose, 0);
+	//glutTimerFunc(30000, lose, 0);
+
+	glutTimerFunc(5000, TimerOfHunger, 0);
+
 	glutSpecialFunc(spe);
 	PlaySound(TEXT("op.wav"), NULL, SND_ASYNC);
 
@@ -1286,6 +1458,8 @@ void main(int argc, char** argv) {
 	glEnable(GL_LIGHT0);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_TEXTURE_2D);
+
 
 	glShadeModel(GL_SMOOTH);
 
