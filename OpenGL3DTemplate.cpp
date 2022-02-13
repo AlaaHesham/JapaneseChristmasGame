@@ -94,6 +94,7 @@ void setupCamera() {
 	gluLookAt(cameraX, cameraY, cameraZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
+
 void setupLights() {
 	GLfloat ambient[] = { 0.7f, 0.7f, 0.7, 1.0f };
 	GLfloat diffuse[] = { 0.6f, 0.6f, 0.6, 1.0f };
@@ -1312,7 +1313,7 @@ void Display() {
 		PlaySound(TEXT("Remedy for Melancholy.wav"), NULL, SND_ASYNC);
 	}
 
-	screen();
+	//screen();
 
 	glFlush();
 }
@@ -1443,9 +1444,9 @@ void main(int argc, char** argv) {
 	glutKeyboardFunc(key);
 	glutIdleFunc(anim);
 	glutTimerFunc(0, timer, 0);
-	//glutTimerFunc(30000, lose, 0);
+	glutTimerFunc(30000, lose, 0);
 
-	glutTimerFunc(5000, TimerOfHunger, 0);
+	//glutTimerFunc(5000, TimerOfHunger, 0);
 
 	glutSpecialFunc(spe);
 	PlaySound(TEXT("op.wav"), NULL, SND_ASYNC);
